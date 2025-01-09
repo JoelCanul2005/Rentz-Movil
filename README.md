@@ -113,5 +113,6 @@ Para dudas, soporte o comentarios:
 
 ## 🌟 ¡Gracias por visitar nuestro proyecto!
 
+Si te gustó este proyecto, no olvides darle una ⭐ en el repositorio. Tu apoyo nos motiva a seguir mejorando 🚀.
 
 > _"Facilitando la organización de tus eventos, un mueble a la vez."_ 🪑🎊
