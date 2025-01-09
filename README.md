@@ -46,12 +46,12 @@ Para ejecutar este proyecto, necesitas:
 
 1. **Clona el repositorio:**
    ```bash
-   git clone https://github.com/JoelCanul2005/Proyecto-RENTZ.git
+   git clone https://github.com/JoelCanul2005/Rentz-Movil.git
    ```
 
 2. **Accede al directorio del proyecto:**
    ```bash
-   cd Proyecto-RENTZ
+   cd RENTZ-Movil
    ```
 
 3. **Instala las dependencias:**
@@ -69,7 +69,7 @@ Para ejecutar este proyecto, necesitas:
 ## 🗂️ Estructura del Proyecto
 
 ```plaintext
-Proyecto-Rentz/
+RENTZ-Movil/
 ├── assets/               # Archivos estáticos
 │   ├── fonts/            # Fuentes personalizadas
 │   ├── icons/            # Íconos utilizados
@@ -112,7 +112,5 @@ Para dudas, soporte o comentarios:
 ---
 
 ## 🌟 ¡Gracias por visitar nuestro proyecto!
-
-Si te gustó este proyecto, no olvides darle una ⭐ en el repositorio. Tu apoyo nos motiva a seguir mejorando 🚀.
 
 > _"Facilitando la organización de tus eventos, un mueble a la vez."_ 🪑🎊
