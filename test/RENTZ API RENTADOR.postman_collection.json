@@ -1,0 +1,1198 @@
+{
+	"info": {
+		"_postman_id": "ee38e29e-f07b-4f0c-a34b-b624d365b06c",
+		"name": "RENTZ API RENTADOR",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33380742"
+	},
+	"item": [
+		{
+			"name": "Registro",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generar valores dinámicos para username y password\r",
+							"const randomSuffix = Math.floor(Math.random() * 10000); // Número aleatorio entre 0 y 9999\r",
+							"const username = `user_${randomSuffix}`; // Ejemplo: user_1234\r",
+							"const password = `pass_${randomSuffix}`; // Ejemplo: pass_1234\r",
+							"\r",
+							"// Asignar valores a las variables del entorno\r",
+							"pm.environment.set(\"username\", username);\r",
+							"pm.environment.set(\"password\", password);\r",
+							"\r",
+							"// Mostrar en consola\r",
+							"console.log(\"Generated username:\", username);\r",
+							"console.log(\"Generated password:\", password);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Juan Pérez\",\r\n  \"username\": \"{{username}}\",\r\n  \"contrasenia\": \"{{password}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/auth/register",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); // Verifica que el estado sea 200 (OK)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Token de sesión recibido\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"token\"); // Verifica que la respuesta incluye un token\r",
+							"    pm.environment.set(\"authToken\", jsonData.token); // Guarda el token en el entorno\r",
+							"    console.log(\"Token guardado en el entorno:\", jsonData.token);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"contrasenia\": \"{{password}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/auth/login",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerDatosCliente",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/cliente?",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"cliente"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerProductos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							"\r",
+							"console.log(\"Productos obtenidos:\", pm.response.json().productos);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/productos?page=1&limit=10",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BusquedaProductos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Genera un número aleatorio entre min y max\r",
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Genera valores aleatorios para minPrecio y maxPrecio\r",
+							"let minPrecio = getRandomPrice(1, 10); // Rango entre 1 y 10\r",
+							"let maxPrecio = getRandomPrice(minPrecio, 200); // Rango entre minPrecio y 20 (asegurando que minPrecio sea menor)\r",
+							"\r",
+							"pm.environment.set(\"minPrecio\", minPrecio);\r",
+							"pm.environment.set(\"maxPrecio\", maxPrecio);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); // Verifica que la respuesta sea 200 OK\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"minPrecio\": {{minPrecio}},\r\n  \"maxPrecio\": {{maxPrecio}},\r\n  \"page\": 1,\r\n  \"limit\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/buscar",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"buscar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerPaquetes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let numran = getRandomPrice(1, 10); \r",
+							"\r",
+							"pm.environment.set(\"numran\", numran);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/paquetes?page={{numran}}&limit={{numran}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"paquetes"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "{{numran}}"
+						},
+						{
+							"key": "limit",
+							"value": "{{numran}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerProductosId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); // Verifica que la respuesta sea 200 OK\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/{{producto_id}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"{{producto_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerPaquetesId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); // Verifica que la respuesta sea 200 OK\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let numranid = getRandomPrice(1, 8000); \r",
+							"\r",
+							"pm.environment.set(\"numranid\", numranid);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/paquetes/{{numranid}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"paquetes",
+						"{{numranid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BusquedaPaquetes",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let minPrecio = getRandomPrice(10, 20);\r",
+							"let maxPrecio = getRandomPrice(minPrecio, 80);\r",
+							"\r",
+							"pm.environment.set(\"minPrecio\", minPrecio);\r",
+							"pm.environment.set(\"maxPrecio\", maxPrecio);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"minPrecio\": {{minPrecio}},\r\n  \"maxPrecio\": {{maxPrecio}},\r\n  \"page\": 1,\r\n  \"limit\": 10\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/paquetes/buscar",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"paquetes",
+						"buscar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerRentadoras",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/rentadores?page=2&limit=10",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"rentadores"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerSimilares",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let similarid = getRandomPrice(1, 8000);\r",
+							"\r",
+							"pm.environment.set(\"similarid\", similarid);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/similares/{{similarid}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"similares",
+						"{{similarid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AgregarDireccion",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"function getRandomPhoneNumber() {\r",
+							"    return \"+1\" + getRandomNumber(1000000000, 9999999999);\r",
+							"}\r",
+							"\r",
+							"// Función para generar un correo aleatorio\r",
+							"function getRandomEmail() {\r",
+							"    return \"user\" + getRandomNumber(1, 999999) + \"@ejemplo.com\";\r",
+							"}\r",
+							"\r",
+							"// Función para generar una dirección aleatoria\r",
+							"function getRandomAddress() {\r",
+							"    return getRandomNumber(100, 999) + \" Calle \" + [\"Principal\", \"Secundaria\", \"Avenida\", \"Paseo\"][getRandomNumber(1, 3)];\r",
+							"}\r",
+							"\r",
+							"// Función para generar una ciudad aleatoria\r",
+							"function getRandomCity() {\r",
+							"    return [\"Ciudad A\", \"Ciudad B\", \"Ciudad C\", \"Ciudad D\"][getRandomNumber(1, 3)];\r",
+							"}\r",
+							"\r",
+							"// Función para generar un estado aleatorio\r",
+							"function getRandomState() {\r",
+							"    return [\"Estado 1\", \"Estado 2\", \"Estado 3\", \"Estado 4\"][getRandomNumber(1, 3)];\r",
+							"}\r",
+							"\r",
+							"// Genera los valores aleatorios y los guarda como variables de entorno\r",
+							"let direccion = getRandomAddress();\r",
+							"let ciudad = getRandomCity();\r",
+							"let estado = getRandomState();\r",
+							"let codigoPostal = getRandomNumber(10000, 99999).toString();\r",
+							"let correo = getRandomEmail();\r",
+							"let telefono = getRandomPhoneNumber();\r",
+							"let direccionPrioritaria = Math.random() > 0.5;  // Aleatorio entre true y false\r",
+							"\r",
+							"pm.environment.set(\"direccion\", direccion);\r",
+							"pm.environment.set(\"ciudad\", ciudad);\r",
+							"pm.environment.set(\"estado\", estado);\r",
+							"pm.environment.set(\"codigo_postal\", codigoPostal);\r",
+							"pm.environment.set(\"correo\", correo);\r",
+							"pm.environment.set(\"telefono\", telefono);\r",
+							"pm.environment.set(\"direccion_prioritaria\", direccionPrioritaria);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"direccion\": \"123 Calle Principal\",\r\n  \"ciudad\": \"Ciudad\",\r\n  \"estado\": \"Estado\",\r\n  \"codigo_postal\": \"12345\",\r\n  \"pais\": \"País\",\r\n  \"correo\": \"correo@ejemplo.com\",\r\n  \"telefono\": \"+1234567890\",\r\n  \"direccion_prioritaria\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/direcciones",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"direcciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "obtenerDirecciones",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/direcciones",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"direcciones"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AgregarMetodoPago",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Función para generar un número aleatorio entre min y max\r",
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un número de tarjeta de crédito aleatorio (16 dígitos)\r",
+							"function getRandomCreditCardNumber() {\r",
+							"    let cardNumber = \"4\" + getRandomNumber(100000000000000, 999999999999999); // Tarjeta tipo Visa (comienza con 4)\r",
+							"    return cardNumber;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un nombre aleatorio para el titular\r",
+							"function getRandomCardHolderName() {\r",
+							"    return [\"Juan Pérez\", \"Carlos López\", \"María García\", \"Ana Ruiz\", \"Jesus Gamboa\", \"Jorge Canul\", \"Jose Pech\", \"Sofia Basto\"][getRandomNumber(0, 7)];\r",
+							"}\r",
+							"\r",
+							"// Función para generar una fecha de expiración aleatoria en formato MM/AA\r",
+							"function getRandomExpirationDate() {\r",
+							"    let month = getRandomNumber(1, 12);\r",
+							"    let year = getRandomNumber(23, 30); // Expiración entre 2023 y 2030\r",
+							"    return (month < 10 ? \"0\" + month : month) + \"/\" + year;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un CVV aleatorio (3 dígitos)\r",
+							"function getRandomCVV() {\r",
+							"    return getRandomNumber(100, 999);\r",
+							"}\r",
+							"\r",
+							"// Función para generar un nombre de banco aleatorio\r",
+							"function getRandomBank() {\r",
+							"    return [\"Banco Ejemplo\", \"Banco Nacional\", \"Banco Popular\", \"Banco Internacional\", \"BBVA\", \"BANCOMER\", \"BANAMEX\", \"HSBC\", \"VISA\", \"MASTERCARD\", \"SANTANDER\"][getRandomNumber(0, 11)];\r",
+							"}\r",
+							"\r",
+							"// Genera los valores aleatorios y los guarda como variables de entorno\r",
+							"let tipoMetodo = \"tarjeta_credito\";\r",
+							"let numeroTarjeta = getRandomCreditCardNumber();\r",
+							"let titularTarjeta = getRandomCardHolderName();\r",
+							"let fechaExpiracion = getRandomExpirationDate();\r",
+							"let cvv = getRandomCVV();\r",
+							"let banco = getRandomBank();\r",
+							"\r",
+							"// Establece las variables en el entorno de Postman\r",
+							"pm.environment.set(\"tipo_metodo\", tipoMetodo);\r",
+							"pm.environment.set(\"numero_tarjeta\", numeroTarjeta);\r",
+							"pm.environment.set(\"titular_tarjeta\", titularTarjeta);\r",
+							"pm.environment.set(\"fecha_expiracion\", fechaExpiracion);\r",
+							"pm.environment.set(\"cvv\", cvv);\r",
+							"pm.environment.set(\"banco\", banco);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tipo_metodo\": \"{{tipo_metodo}}\",\r\n  \"numero_tarjeta\": \"{{numero_tarjeta}}\",\r\n  \"titular_tarjeta\": \"{{titular_tarjeta}}\",\r\n  \"fecha_expiracion\": \"{{fecha_expiracion}}\",\r\n  \"cvv\": \"{{cvv}}\",\r\n  \"banco\": \"{{banco}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/metodos_pago",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"metodos_pago"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerMetodosPago",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/metodos_pago?",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"metodos_pago"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AgregaraCarrito",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let numrangrande = getRandomPrice(1, 8000); // Rango entre 1 y 10\r",
+							"\r",
+							"pm.environment.set(\"numrangrande\", numrangrande);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"producto_id\": {{numrangrande}},\r\n  \"rentador_id\": {{numrangrande}},\r\n  \"cantidad\": {{numrangrande}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/carrito/agregar",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"carrito",
+						"agregar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerCarrito",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/carrito",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"carrito"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RealizarPedido",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Generar un número aleatorio dentro de un rango\r",
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Generar una dirección aleatoria\r",
+							"function getRandomAddress() {\r",
+							"    const tiposCalle = [\"Falsa\", \"Principal\", \"Secundaria\", \"Avenida\", \"Paseo\"];\r",
+							"    const ciudades = [\"Ciudad A\", \"Ciudad B\", \"Ciudad C\", \"Metropolis\"];\r",
+							"    const paises = [\"México\", \"España\", \"Argentina\", \"Chile\"];\r",
+							"    return `Calle ${tiposCalle[getRandomNumber(0, tiposCalle.length - 1)]} ${getRandomNumber(1, 999)}, ${ciudades[getRandomNumber(0, ciudades.length - 1)]}, ${paises[getRandomNumber(0, paises.length - 1)]}`;\r",
+							"}\r",
+							"\r",
+							"// Generar productos aleatorios\r",
+							"function getRandomProducts() {\r",
+							"    const numProductos = getRandomNumber(1, 5); // Genera entre 1 y 5 productos\r",
+							"    let productos = [];\r",
+							"\r",
+							"    for (let i = 0; i < numProductos; i++) {\r",
+							"        productos.push({\r",
+							"            producto_id: getRandomNumber(1, 100), // IDs aleatorios entre 1 y 100\r",
+							"            cantidad: getRandomNumber(1, 10) // Cantidades aleatorias entre 1 y 10\r",
+							"        });\r",
+							"    }\r",
+							"\r",
+							"    return productos;\r",
+							"}\r",
+							"\r",
+							"// Generar valores aleatorios\r",
+							"let direccionEnvio = getRandomAddress();\r",
+							"let productos = getRandomProducts();\r",
+							"\r",
+							"// Guardar valores en variables de entorno\r",
+							"pm.environment.set(\"direccion_envio\", direccionEnvio);\r",
+							"pm.environment.set(\"productos\", JSON.stringify(productos)); // Guardar como JSON string\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"productos\": {{productos}}, \r\n  \"direccion_envio\": \"{{direccion_envio}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/pedido/realizar",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"pedido",
+						"realizar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ObtenerPedidos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/pedido",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"pedido"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

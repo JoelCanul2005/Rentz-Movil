@@ -1,0 +1,511 @@
+{
+	"info": {
+		"_postman_id": "8d8c611b-abbf-4573-ae82-fd9932e756c9",
+		"name": "RENTZ API RENTADORA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33380742"
+	},
+	"item": [
+		{
+			"name": "Registro Rentadora",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201); \r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Registro exitoso\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"mensaje\", \"Registro exitoso\"); // Verifica el mensaje de éxito\r",
+							"    pm.expect(jsonData).to.have.property(\"rentador\"); // Verifica que el objeto \"rentador\" esté presente\r",
+							"    pm.expect(jsonData.rentador).to.have.property(\"id\"); // Verifica que el \"id\" esté presente en \"rentador\"\r",
+							"});\r",
+							"\r",
+							"// Guarda el ID del rentador en una variable de entorno\r",
+							"const jsonData = pm.response.json();\r",
+							"if (jsonData.rentador && jsonData.rentador.id) {\r",
+							"    pm.environment.set(\"idrentador\", jsonData.rentador.id);\r",
+							"    console.log(\"ID del rentador guardado:\", jsonData.rentador.id); // Mensaje de depuración\r",
+							"} else {\r",
+							"    console.log(\"No se encontró el ID del rentador en la respuesta.\");\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Función para generar un número aleatorio dentro de un rango\r",
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Generar un nombre completo aleatorio\r",
+							"function getRandomName() {\r",
+							"    const nombres = [\"Carlos\", \"Juan\", \"Luis\", \"Ana\", \"María\", \"Elena\"];\r",
+							"    const apellidos = [\"Mendoza\", \"López\", \"García\", \"Hernández\", \"Pérez\"];\r",
+							"    return `${nombres[getRandomNumber(0, nombres.length - 1)]} ${apellidos[getRandomNumber(0, apellidos.length - 1)]}`;\r",
+							"}\r",
+							"\r",
+							"// Generar un username aleatorio\r",
+							"function getRandomUsername() {\r",
+							"    return `user${getRandomNumber(100, 999)}${String.fromCharCode(97 + getRandomNumber(0, 25))}`;\r",
+							"}\r",
+							"\r",
+							"// Generar un correo electrónico aleatorio\r",
+							"function getRandomEmail() {\r",
+							"    const dominios = [\"mail.com\", \"example.com\", \"test.org\"];\r",
+							"    return `user${getRandomNumber(1000, 9999)}@${dominios[getRandomNumber(0, dominios.length - 1)]}`;\r",
+							"}\r",
+							"\r",
+							"// Generar un teléfono aleatorio\r",
+							"function getRandomPhoneNumber() {\r",
+							"    return `555-${getRandomNumber(1000, 9999)}`;\r",
+							"}\r",
+							"\r",
+							"// Generar una URL de imagen de perfil aleatoria\r",
+							"function getRandomProfileImage() {\r",
+							"    const baseUrls = [\"https://miapp.com/imagenes\", \"https://avatars.com/images\", \"https://imgprofiles.net\"];\r",
+							"    return `${baseUrls[getRandomNumber(0, baseUrls.length - 1)]}/perfil${getRandomNumber(1, 50)}.jpg`;\r",
+							"}\r",
+							"\r",
+							"// Generar datos dinámicos\r",
+							"let nombre = getRandomName();\r",
+							"let username = getRandomUsername();\r",
+							"let contrasenia = `password${getRandomNumber(100, 999)}`;\r",
+							"let correo = getRandomEmail();\r",
+							"let telefono = getRandomPhoneNumber();\r",
+							"let imagenPerfil = getRandomProfileImage();\r",
+							"\r",
+							"// Guardar en variables de entorno\r",
+							"pm.environment.set(\"nombre\", nombre);\r",
+							"pm.environment.set(\"username\", username);\r",
+							"pm.environment.set(\"contrasenia\", contrasenia);\r",
+							"pm.environment.set(\"correo\", correo);\r",
+							"pm.environment.set(\"telefono\", telefono);\r",
+							"pm.environment.set(\"imagen_perfil\", imagenPerfil);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"{{nombre}}\",\r\n  \"username\": \"{{username}}\",\r\n  \"contrasenia\": \"{{contrasenia}}\",\r\n  \"correo\": \"{{correo}}\",\r\n  \"telefono\": \"{{telefono}}\",\r\n  \"imagen_perfil\": \"{{imagen_perfil}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/rentadores/register",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"rentadores",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Rentadora",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							"\r",
+							"pm.test(\"Token recibido correctamente\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"token\"); \r",
+							"});\r",
+							"\r",
+							"// Guarda el token en una variable de entorno\r",
+							"const jsonData = pm.response.json();\r",
+							"pm.environment.set(\"authToken\", jsonData.token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"contrasenia\": \"{{contrasenia}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/rentadores/login",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"rentadores",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Agregar productos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Función para generar un número aleatorio dentro de un rango\r",
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un nombre de producto aleatorio\r",
+							"function getRandomProductName() {\r",
+							"    const tipos = [\"Silla\", \"Mesa\", \"Carpa\", \"Estante\", \"Taburete\"];\r",
+							"    const adjetivos = [\"plegable\", \"resistente\", \"moderna\", \"clásica\", \"elegante\"];\r",
+							"    return `${tipos[getRandomNumber(0, tipos.length - 1)]} ${adjetivos[getRandomNumber(0, adjetivos.length - 1)]}`;\r",
+							"}\r",
+							"\r",
+							"// Función para generar una descripción aleatoria\r",
+							"function getRandomDescription(productName) {\r",
+							"    const usos = [\"eventos al aire libre\", \"interiores\", \"reuniones formales\", \"fiestas infantiles\", \"conciertos\"];\r",
+							"    return `${productName} ideal para ${usos[getRandomNumber(0, usos.length - 1)]}.`;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un tipo de material aleatorio\r",
+							"function getRandomMaterial() {\r",
+							"    const materiales = [\"Plástico\", \"Madera\", \"Metal\"];\r",
+							"    return materiales[getRandomNumber(0, materiales.length - 1)];\r",
+							"}\r",
+							"\r",
+							"// Función para generar una URL de imagen aleatoria\r",
+							"function getRandomImageURL() {\r",
+							"    const bases = [\"https://example.com\", \"https://images.com\", \"https://productphotos.net\"];\r",
+							"    const categorias = [\"sillas\", \"mesas\", \"carpas\", \"estantes\", \"taburetes\"];\r",
+							"    return `${bases[getRandomNumber(0, bases.length - 1)]}/${categorias[getRandomNumber(0, categorias.length - 1)]}${getRandomNumber(1, 50)}.jpg`;\r",
+							"}\r",
+							"\r",
+							"// Generar datos dinámicos\r",
+							"let nombre = getRandomProductName();\r",
+							"let descripcion = getRandomDescription(nombre);\r",
+							"let precio = parseFloat((getRandomNumber(10, 1000) + Math.random()).toFixed(2));\r",
+							"let cantidadDisponible = getRandomNumber(1, 500);\r",
+							"let tipoMaterial = getRandomMaterial();\r",
+							"let esPromocion = Math.random() > 0.5; // Aleatorio entre true y false\r",
+							"let rentadorId = getRandomNumber(1, 1000);\r",
+							"let imagenPrincipal = getRandomImageURL();\r",
+							"\r",
+							"// Guardar en variables de entorno\r",
+							"pm.environment.set(\"nombre\", nombre);\r",
+							"pm.environment.set(\"descripcion\", descripcion);\r",
+							"pm.environment.set(\"precio\", precio);\r",
+							"pm.environment.set(\"cantidad_disponible\", cantidadDisponible);\r",
+							"pm.environment.set(\"tipo_material\", tipoMaterial);\r",
+							"pm.environment.set(\"es_promocion\", esPromocion);\r",
+							"pm.environment.set(\"rentador_id\", rentadorId);\r",
+							"pm.environment.set(\"imagen_principal\", imagenPrincipal);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(201); \r",
+							"});\r",
+							"\r",
+							"pm.test(\"ID DE PRODUCTO recibido correctamente\", function () {\r",
+							"    const jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property(\"id\"); \r",
+							"});\r",
+							"\r",
+							"// Guarda el token en una variable de entorno\r",
+							"const jsonData = pm.response.json();\r",
+							"pm.environment.set(\"id\", jsonData.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"{{nombre}}\",\r\n  \"descripcion\": \"{{descripcion}}\",\r\n  \"precio\": {{precio}},\r\n  \"cantidad_disponible\": {{cantidad_disponible}},\r\n  \"tipo_material\": \"{{tipo_material}}\",\r\n  \"es_promocion\": {{es_promocion}},\r\n  \"rentador_id\": {{idrentador}},\r\n  \"imagen_principal\": \"{{imagen_principal}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/agregar",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"agregar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener Mis Productos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/rentador/misproductos",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"rentador",
+						"misproductos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar productos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Función para generar un número aleatorio dentro de un rango\r",
+							"function getRandomNumber(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un nombre de producto aleatorio\r",
+							"function getRandomProductName() {\r",
+							"    const tipos = [\"Silla\", \"Mesa\", \"Carpa\", \"Estante\", \"Taburete\"];\r",
+							"    const adjetivos = [\"plegable\", \"resistente\", \"moderna\", \"clásica\", \"elegante\"];\r",
+							"    return `${tipos[getRandomNumber(0, tipos.length - 1)]} ${adjetivos[getRandomNumber(0, adjetivos.length - 1)]}`;\r",
+							"}\r",
+							"\r",
+							"// Función para generar una descripción aleatoria\r",
+							"function getRandomDescription(productName) {\r",
+							"    const usos = [\"eventos al aire libre\", \"interiores\", \"reuniones formales\", \"fiestas infantiles\", \"conciertos\"];\r",
+							"    return `${productName} ideal para ${usos[getRandomNumber(0, usos.length - 1)]}.`;\r",
+							"}\r",
+							"\r",
+							"// Función para generar un tipo de material aleatorio\r",
+							"function getRandomMaterial() {\r",
+							"    const materiales = [\"Plástico\", \"Madera\", \"Metal\"];\r",
+							"    return materiales[getRandomNumber(0, materiales.length - 1)];\r",
+							"}\r",
+							"\r",
+							"// Función para generar una URL de imagen aleatoria\r",
+							"function getRandomImageURL() {\r",
+							"    const bases = [\"https://example.com\", \"https://images.com\", \"https://productphotos.net\"];\r",
+							"    const categorias = [\"sillas\", \"mesas\", \"carpas\", \"estantes\", \"taburetes\"];\r",
+							"    return `${bases[getRandomNumber(0, bases.length - 1)]}/${categorias[getRandomNumber(0, categorias.length - 1)]}${getRandomNumber(1, 50)}.jpg`;\r",
+							"}\r",
+							"\r",
+							"// Generar datos dinámicos\r",
+							"let nombre = getRandomProductName();\r",
+							"let descripcion = getRandomDescription(nombre);\r",
+							"let precio = parseFloat((getRandomNumber(10, 1000) + Math.random()).toFixed(2));\r",
+							"let cantidadDisponible = getRandomNumber(1, 500);\r",
+							"let tipoMaterial = getRandomMaterial();\r",
+							"let esPromocion = Math.random() > 0.5; // Aleatorio entre true y false\r",
+							"let rentadorId = getRandomNumber(1, 1000);\r",
+							"let imagenPrincipal = getRandomImageURL();\r",
+							"\r",
+							"// Guardar en variables de entorno\r",
+							"pm.environment.set(\"nombre\", nombre);\r",
+							"pm.environment.set(\"descripcion\", descripcion);\r",
+							"pm.environment.set(\"precio\", precio);\r",
+							"pm.environment.set(\"cantidad_disponible\", cantidadDisponible);\r",
+							"pm.environment.set(\"tipo_material\", tipoMaterial);\r",
+							"pm.environment.set(\"es_promocion\", esPromocion);\r",
+							"pm.environment.set(\"rentador_id\", rentadorId);\r",
+							"pm.environment.set(\"imagen_principal\", imagenPrincipal);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200); \r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"{{nombre}}\",\r\n  \"descripcion\": \"{{descripcion}}\",\r\n  \"precio\": {{precio}},\r\n  \"cantidad_disponible\": {{cantidad_disponible}},\r\n  \"tipo_material\": \"{{tipo_material}}\",\r\n  \"es_promocion\": {{es_promocion}},\r\n  \"rentador_id\": {{idrentador}},\r\n  \"imagen_principal\": \"{{imagen_principal}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/update/{{id}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"update",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Productos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Respuesta exitosa\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{api_base_url}}/api/productos/delete/{{id}}",
+					"host": [
+						"{{api_base_url}}"
+					],
+					"path": [
+						"api",
+						"productos",
+						"delete",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
