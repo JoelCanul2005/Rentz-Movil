@@ -183,6 +183,22 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let numran = getRandomPrice(1, 10); \r",
+							"\r",
+							"pm.environment.set(\"numran\", numran);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"protocolProfileBehavior": {
@@ -207,7 +223,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{api_base_url}}/api/productos?page=1&limit=10",
+					"raw": "{{api_base_url}}/api/productos?page={{numran}}&limit={{numran}}",
 					"host": [
 						"{{api_base_url}}"
 					],
@@ -218,11 +234,11 @@
 					"query": [
 						{
 							"key": "page",
-							"value": "1"
+							"value": "{{numran}}"
 						},
 						{
 							"key": "limit",
-							"value": "10"
+							"value": "{{numran}}"
 						}
 					]
 				}
@@ -571,6 +587,22 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function getRandomPrice(min, max) {\r",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;\r",
+							"}\r",
+							"\r",
+							"let numran = getRandomPrice(1, 10); \r",
+							"\r",
+							"pm.environment.set(\"numran\", numran);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"request": {
@@ -583,7 +615,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{api_base_url}}/api/rentadores?page=2&limit=10",
+					"raw": "{{api_base_url}}/api/rentadores?page={{numran}}&limit={{numran}}",
 					"host": [
 						"{{api_base_url}}"
 					],
@@ -594,11 +626,11 @@
 					"query": [
 						{
 							"key": "page",
-							"value": "2"
+							"value": "{{numran}}"
 						},
 						{
 							"key": "limit",
-							"value": "10"
+							"value": "{{numran}}"
 						}
 					]
 				}
